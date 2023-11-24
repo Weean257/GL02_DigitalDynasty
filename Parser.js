@@ -72,7 +72,18 @@ function parseDataLine(line) {
   };
 }
 
-// Exemple d'utilisation
-const filePath = ".data/AB/edt.cru";
-const parsedData = parseCRUFile(filePath);
-console.log(parsedData);
+function getData() {
+  const filePath = "./data/AB/edt.cru";
+  let parsedData = parseCRUFile(filePath);
+  console.log(parsedData);
+
+  let courses = parsedData?.map((section, idx) => {
+    let course = {
+      courseId: section.section,
+      sessions: [],
+    };
+    return course;
+  });
+}
+
+getData();
