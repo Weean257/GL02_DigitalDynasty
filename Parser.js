@@ -75,15 +75,16 @@ function parseDataLine(line) {
 function getData() {
   const filePath = "./data/AB/edt.cru";
   let parsedData = parseCRUFile(filePath);
-  console.log(parsedData);
+  //console.log(parsedData);
 
-  let courses = parsedData?.map((section, idx) => {
+  /* let courses = parsedData?.map((section, idx) => {
     let course = {
       courseId: section.section,
       sessions: [],
     };
     return course;
-  });
+  }); */
+  return parsedData;
 }
 
-getData();
+module.exports.getData = getData;
