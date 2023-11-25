@@ -1,90 +1,168 @@
-const fs = require("fs");
-const path = require("path");
+// CourseParser.js
 
-/**
- * Fonction pour analyser le contenu d'un fichier .cru
- * @param {string} filePath - Chemin du fichier à analyser
- * @returns {Object[]} - Un tableau d'objets représentant les données analysées
- */
-function parseCRUFile(filePath) {
-  const content = fs.readFileSync(filePath, "utf8");
-  const lines = content.split("\n");
+const { getCruFilesContent } = require("./data");
 
-  const parsedData = [];
-  let currentSection = null;
+class Course {
+  constructor(code) {
+    this.code = code;
+    this.sessions = []; // Array of Session objects
+  }
 
-  lines.forEach((line) => {
-    if (line.startsWith("+")) {
-      // Début d'une nouvelle section
-      currentSection = line.substring(1).trim();
-    } else if (currentSection && line.trim()) {
-      // Traitement des données de la section
-      const data = parseDataLine(line);
-      if (data) {
-        parsedData.push({ section: currentSection, data });
-      }
-    }
-  });
-
-  return parsedData;
+  addSession(session) {
+    this.sessions.push(session);
+  }
 }
 
-/**
- * Fonction pour analyser une ligne de données
- * @param {string} line - Ligne de données à analyser
- * @returns {Object|null} - Un objet représentant les données ou null si non analysable
- */
-function parseDataLine(line) {
-  // Séparation des composants de la ligne
-  const components = line.split(",");
+class Session {
+  constructor(type, num, capacity, day, time, frequency, room) {
+    this.type = type;
+    this.num = num;
+    this.capacity = parseInt(capacity);
+    this.day = day;
+    this.time = time;
+    this.frequency = frequency;
+    this.room = room;
+  }
+}
 
-  // Assurer que la ligne contient suffisamment de composants
-  if (components.length < 6) {
+var CourseParser = function (showTokenize, showParsedSymbols) {
+  this.parsedCourses = [];
+  this.symb = ["+"];
+  this.showTokenize = showTokenize;
+  this.showParsedSymbols = showParsedSymbols;
+  this.errorCount = 0;
+};
+
+CourseParser.prototype.tokenize = function (data) {
+  var separator = /(\r\n)/;
+  return data
+    .split(separator)
+    .filter((val) => !val.match(separator) && val.trim() !== "");
+};
+
+CourseParser.prototype.parse = function (data) {
+  var tData = this.tokenize(data);
+  if (this.showTokenize) {
+    console.log(tData);
+  }
+  this.listCourses(tData);
+  if (this.errorCount > 0) {
+    console.log("Finished parsing with " + this.errorCount + " errors.");
+  } else {
+    console.log("Parsing successful.");
+  }
+};
+
+CourseParser.prototype.getParsedCourses = function () {
+  const directoryPath = ".\\data"; // Replace with your directory path
+
+  return new Promise((resolve, reject) => {
+    getCruFilesContent(directoryPath)
+      .then((data) => {
+        this.parse(data);
+        resolve(this.parsedCourses);
+      })
+      .catch((err) => {
+        console.error("Une erreur est survenue:", err);
+        reject(err);
+      });
+  });
+};
+
+CourseParser.prototype.errMsg = function (msg, input) {
+  this.errorCount++;
+  console.log("Parsing Error ! on " + input + " -- msg : " + msg);
+};
+
+CourseParser.prototype.next = function (input) {
+  if (input.length === 0) {
+    this.errMsg("Unexpected end of input", []);
+    return null;
+  }
+  var curS = input.shift();
+  /* if (this.showParsedSymbols) {
+    console.log(curS);
+  } */
+  return curS;
+};
+
+CourseParser.prototype.accept = function (s) {
+  //console.log("s", s);
+  var idx = this.symb.indexOf(s);
+  if (idx === -1) {
+    //this.errMsg("symbol " + s + " unknown", [" "]);
+    return false;
+  }
+  return idx;
+};
+
+CourseParser.prototype.check = function (s, input) {
+  return input.length > 0 && this.accept(s) === this.accept(input[0]);
+};
+
+CourseParser.prototype.expect = function (s, input) {
+  var nextSymbol = this.next(input);
+  if (nextSymbol && s === nextSymbol) {
+    return true;
+  } else {
+    this.errMsg("Expected symbol " + s + ", but found " + nextSymbol, input);
+    return false;
+  }
+};
+
+CourseParser.prototype.listCourses = function (input) {
+  //console.log("input", input);
+  while (input.length > 0) {
+    if (input[0] === "+UVUV") {
+      input.shift();
+    }
+    if (this.check("+", input[0])) {
+      var course = this.course(input);
+      if (course) {
+        this.parsedCourses.push(course);
+      }
+    } else {
+      input.shift();
+    }
+  }
+  //this.expect("$$", input);
+};
+
+CourseParser.prototype.course = function (input) {
+  /* if (!this.check("COURSE_CODE", input[0])) {
+    this.errMsg("Course code expected", input);
+    return null;
+  } */
+
+  var courseCode = this.next(input).slice(1); // Remove the '+' sign
+  var course = new Course(courseCode);
+
+  while (input.length !== 0 && /\/{2}/.test(input[0])) {
+    var session = this.session(input);
+    if (session) {
+      course.addSession(session);
+    }
+  }
+  //console.log("course", course);
+  return course;
+};
+
+CourseParser.prototype.session = function (input) {
+  var sessionDetails = this.next(input).split(",");
+  if (sessionDetails.length < 6) {
+    this.errMsg("Incomplete session details", sessionDetails);
     return null;
   }
 
-  // Extraction des données
-  const courseId = components[0].trim();
-  const courseType = components[1].trim();
-  const participants = components[2].includes("=")
-    ? components[2].split("=")[1].trim()
-    : null;
-  const timeInfo = components[3].split(" ");
-  const day = timeInfo[0].includes("=")
-    ? timeInfo[0].split("=")[1].trim()
-    : null;
-  const hours = timeInfo[1].trim();
-  const frequency = components[4].includes("=")
-    ? components[4].split("=")[1].trim()
-    : null;
-  const room = components[5].includes("=")
-    ? components[5].split("=")[1].split("//")[0].trim()
-    : null;
+  var type = sessionDetails[0];
+  var num = sessionDetails[1];
+  var capacity = sessionDetails[2].split("=")[1];
+  var day = sessionDetails[3].split(" ")[0].split("=")[1];
+  var time = sessionDetails[3].split(" ")[1];
+  var frequency = sessionDetails[4];
+  var room = sessionDetails[5].split("=")[1].split(/\/{2}/)[0];
 
-  return {
-    courseId,
-    courseType,
-    participants,
-    day,
-    hours,
-    frequency,
-    room,
-  };
-}
+  return new Session(type, num, capacity, day, time, frequency, room);
+};
 
-function getData() {
-  const filePath = "./data/AB/edt.cru";
-  let parsedData = parseCRUFile(filePath);
-  //console.log(parsedData);
-
-  /* let courses = parsedData?.map((section, idx) => {
-    let course = {
-      courseId: section.section,
-      sessions: [],
-    };
-    return course;
-  }); */
-  return parsedData;
-}
-
-module.exports.getData = getData;
+module.exports = CourseParser;

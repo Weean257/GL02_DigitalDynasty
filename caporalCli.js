@@ -1,4 +1,4 @@
-const { getData } = require("./Parser");
+const CourseParser = require("./Parser");
 
 const cli = require("@caporal/core").default;
 
@@ -12,9 +12,15 @@ cli
     return logger.info(`Hello ${args.name}`);
   })
 
-  .command("data", "Hello the world")
+  .command("data", "Retrieve all data into objects")
   .action(({ args, options, logger }) => {
-    return logger.info(JSON.stringify(getData()));
+    const parser = new CourseParser();
+    parser
+      .getParsedCourses()
+      .then((parsedCourses) => {
+        logger.info("Parsed courses : ", parsedCourses);
+      })
+      .catch((err) => console.error(err));
   });
 
 cli.run(process.argv.slice(2));
