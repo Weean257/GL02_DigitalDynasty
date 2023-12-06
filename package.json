@@ -1,6 +1,14 @@
 {
+  "author": "DigitalDynasty",
   "dependencies": {
     "@caporal/core": "^2.0.7",
     "colors": "^1.4.0"
+  },
+  "main": "caporalCli.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "devDependencies": {
+    "jasmine": "^3.99.0"
   }
 }

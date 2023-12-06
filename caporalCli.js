@@ -12,16 +12,32 @@ cli
   .command('salles', 'Obtenir les salles associées a un cours donné')
   .argument('<nomCours>', 'Nom du cours ')
 
-  .action(({ args, logger }) => {
+  .action(async({ args, logger }) => {
     // Appeler la fonction pour obtenir les salles associées au cours
-    getSalles(args.nomCours, logger);
+    let  sessions = await getSalles(args.nomCours)
+    if (sessions) {
+      // Afficher les salles associées au cours
+      sessions.forEach(session => {
+      logger.info(`La salle pour le cours ${args.nomCours} qui à lieu le ${session.day} à ${session.time} est : ${session.room}`);
+      });
+    } else {
+      logger.error(`Le cours "${args.nomCours}" n'a pas été trouvé.`);
+    }
   })
 
   // Obtenir la capacité d'une salles (Specification 2)
   .command('capacite', 'Récupérer les capacités maximales d\'une salle')
   .argument('<nomSalle>', 'Nom de la salle')
-  .action(({ args, logger }) => { // Appeler la fonction pour récupérer les capacités maximales de la salle
-    getCapacite(args.nomSalle, logger);
+  .action(async({ args, logger }) => { // Appeler la fonction pour récupérer les capacités maximales de la salle
+    let capacite = await getCapacite(args.nomSalle)
+
+    if (capacite !== null) {
+      logger.info(`Capacité maximale de la salle "${args.nomSalle}": ${capacite} personnes`);
+    } else {
+      logger.err(`La salle "${args.nomsalle}" n'a pas été trouvée.`);
+    }
+
+
   })
 
   // Voir les données 

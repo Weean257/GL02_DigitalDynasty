@@ -4,16 +4,15 @@ const CourseParser = require("./Parser");
 
 // Fonction pour obtenir les salles associées à un cours (spec 1)
 
-async function getSalles(cours, logger) {
+async function getSalles(cours) {
   // Créer une instance de CourseParser
   const courseParser = new CourseParser();
 
   // Obtenir les cours parsés à partir des fichiers dans le répertoire spécifié
   const parsedCourses = await courseParser.getParsedCourses();
- 
 
   // Rechercher le cours spécifié
-  const upperCaseTarget = cours && cours.toUpperCase(); // Vérifier que cours est défini avant d'appeler toUpperCase
+  const upperCaseTarget = cours && cours.toUpperCase(); 
 
   let selectedCourse = null;
   for (const course of parsedCourses) {
@@ -22,16 +21,7 @@ async function getSalles(cours, logger) {
       break;
     }
   }
-  if (selectedCourse) {
-    // Afficher les salles associées au cours
-    selectedCourse.sessions.forEach(session => {
-
-    
-      logger.info(`La salle pour le cours ${cours} qui à lieu le ${session.day} à ${session.time} est : ${session.room}`);
-    });
-  } else {
-    logger.error(`Le cours "${cours}" n'a pas été trouvé.`);
-  }
+  return selectedCourse.sessions  
 }
 // Fonction pour récupérer les capacités maximales d'une salle ( spec 2)
 async function getCapacite(salle, logger) {
@@ -58,12 +48,8 @@ async function getCapacite(salle, logger) {
       break;
     }
   }
-
-  if (salleCapacite !== null) {
-    logger.info(`Capacité maximale de la salle "${salle}": ${salleCapacite}`);
-  } else {
-    logger.err(`La salle "${salle}" n'a pas été trouvée.`);
-  }
+  
+return salleCapacite   
 }
 
 module.exports = {
