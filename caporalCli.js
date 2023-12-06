@@ -48,11 +48,13 @@ cli
     parser
       .getParsedCourses()
       .then((parsedCourses) => {
-        logger.info("Parsed courses : ", parsedCourses);
+        //logger.info("Parsed courses : ", parsedCourses);
+        let firstCOurse = parsedCourses[0]
+        let sessions = firstCOurse.sessions
+        logger.info("Sessions : ", sessions);
       })
       .catch((err) => console.error(err));
   });
-  
 
 cli.run(process.argv.slice(2));
 
