@@ -4,6 +4,8 @@ const fs = require('fs');
 const checkForOverlaps = require("./overlap");
 const { execSync } = require('child_process');
 const { getCapacite, getSalles } = require("./CoursFunction");
+const getRoom = require("./RoomFunction");
+const getHour = require("./RoomFunction");
 
 const cli = require("@caporal/core").default;
 cli
