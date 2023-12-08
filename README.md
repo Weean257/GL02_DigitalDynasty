@@ -1,46 +1,64 @@
-# GL02_DigitalDynasty
+# SRU-CLI
 
-# Vous trouverez dans caporalCli.js au niveau de la commande data, comment appeler les données parsées.
+## Description
+SRU-CLI est un outil en ligne de commande pour la gestion et l'analyse des emplois du temps universitaires. Il permet de générer des calendriers iCalendar, de vérifier la qualité des données d'emploi du temps, d'obtenir des informations sur les salles de cours et leurs capacités, ainsi que de visualiser l'occupation des salles.
 
-# Ci- dessus la classe Course et Session.
+## Installation
+Pour installer SRU-CLI, vous devez avoir Node.js installé sur votre machine. Suivez ces étapes :
+1. Clonez le dépôt : `git clone https://github.com/OprahN/GL02_DigitalDynasty`
+2. Naviguez dans le dossier du projet : `cd sru-cli`
+3. Installez les dépendances : `npm install`
+4. Installez globalement Vega-Lite : `npm install -g vega vega-lite vega-cli`
 
-class Course {
-constructor(code) {
-this.code = code;
-this.sessions = []; // Array of Session objects
-}
+## Utilisation
+Voici comment utiliser les différentes commandes de SRU-CLI :
 
-addSession(session) {
-this.sessions.push(session);
-}
-}
+### Générer un Calendrier
+- Commande : `calendar`
+- Arguments :
+  - `<start>` : Date de début (format YYYY-MM-DD)
+  - `<end>` : Date de fin (format YYYY-MM-DD)
+  - `[filename]` : Nom du fichier de sortie (défaut : output.ics)
+- Usage : `node caporalCli.js calendar <start> <end> [filename]`
 
-class Session {
-constructor(type, num, capacity, day, time, frequency, room) {
-this.type = type;
-this.num = num;
-this.capacity = parseInt(capacity);
-this.day = day;
-this.time = time;
-this.frequency = frequency;
-this.room = room;
-}
-}
-# Installation: 
+### Vérifier la Qualité des Données
+- Commande : `quality`
+- Cette commande vérifie s'il y a des conflits dans les emplois du temps.
+- Usage : `node caporalCli.js quality`
 
-npm install
+### Obtenir les Salles pour un Cours
+- Commande : `salles`
+- Argument : `<nomCours>` : Nom du cours
+- Usage : `node caporalCli.js salles <nomCours>`
 
-# Utilisation :
- 
-## Obtention des salles associer à un cours 
+### Récupérer les Capacités des Salles
+- Commande : `capacite`
+- Argument : `<nomSalle>` : Nom de la salle
+- Usage : `node caporalCli.js capacite <nomSalle>`
 
-### Pour obtenir les salles associées à un cours, utilisez la commande suivante et remplacez '<nomCours>' par le nom du cours pour lequel vous souhaitez obtenir les information sur les salles 
+### Voir les Données
+- Commande : `data`
+- Récupère toutes les données des cours et les affiche.
+- Usage : `node caporalCli.js data`
 
-node CaporalCli.js salles <nomCours>
+### Afficher les Créneaux d'Occupation d'une Salle
+- Commande : `room-occupancy`
+- Argument : `<roomCode>` : Code de la salle
+- Usage : `node caporalCli.js room-occupancy <roomCode>`
 
-## Obtention de la capacie d'une salle 
-### Pour obtenir la capacité maximal d'une salles, utilisez la commande suivante et remplacer '<nomSalle>' par la salles pour laquelle vous souhaitez obtenir le capacité 
+### Générer un Graphique d'Occupation des Salles
+- Commande : `generate-occupancy-chart`
+- Génère un graphique montrant les taux d'occupation des salles.
+- Usage : `node caporalCli.js generate-occupancy-chart`
 
-node CaporalCli.js capacite <nomSalle>
+## Contribution
+Les contributions à ce projet sont les bienvenues. Veuillez suivre ces étapes pour contribuer :
+1. Forkez le dépôt.
+2. Créez une nouvelle branche pour vos modifications.
+3. Soumettez une pull request pour révision.
 
+## Licence
+Ce projet est distribué sous la licence MIT.
 
+## Contact
+Pour toute question ou demande de support, veuillez contacter oprah.nkm@gmail.com.
