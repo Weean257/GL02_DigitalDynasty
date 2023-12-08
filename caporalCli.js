@@ -126,7 +126,7 @@ cli
     }
   })
 
-// Cette fonction doit être écrite en conformité avec la structure réelle de vos données
+// fonction d'occupation des salles
 async function calculateOccupancyRates() {
   const parser = new CourseParser();
   const parsedCourses = await parser.getParsedCourses(); // Récupère les cours parsés
@@ -157,7 +157,7 @@ async function calculateOccupancyRates() {
   }));
 }
 
-// Cette fonction calcule la durée d'une session donnée, en supposant que 'time' est une chaîne de caractères 'HH:MM-HH:MM'
+// Cette fonction calcule la durée d'une session donnée
 function calculateSessionDuration(session) {
   const [startTime, endTime] = session.time.split('-').map(time => time.trim());
   const [startHours, startMinutes] = startTime.split(':').map(Number);
