@@ -26,3 +26,21 @@ this.frequency = frequency;
 this.room = room;
 }
 }
+### Installation: 
+
+npm install
+
+### Utilisation :
+ 
+## Obtention des salles associer à un cours 
+
+# Pour obtenir les salles associées à un cours, utilisez la commande suivante et remplacez '<nomCours>' par le nom du cours pour lequel vous souhaitez obtenir les information sur les salles 
+
+npm run salles <nomCours>
+
+## Obtention de la capacie d'une salle 
+# Pour obtenir la capacité maximal d'une salles, utilisez la commande suivante et remplacer '<nomSalle>' par la salles pour laquelle vous souhaitez obtenir le capacité 
+
+npm run capacite <nomSalle>
+
+
