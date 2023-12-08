@@ -4,6 +4,8 @@ const fs = require('fs');
 const checkForOverlaps = require("./overlap");
 const { execSync } = require('child_process');
 const { getCapacite, getSalles } = require("./CoursFunction");
+const getRoom = require("./RoomFunction");
+const getHour = require("./RoomFunction");
 
 const cli = require("@caporal/core").default;
 cli
@@ -25,6 +27,24 @@ cli
       })
       .catch((err) => console.error(err));
   })
+
+  
+  //SPEC_4 Fonction pour obtenir le salles associées à un créneau donné
+  .command ('FreeRoom', 'Salles libres')
+  .argument ('<hour>', 'Créneau')
+  .argument ('<Day>', 'Jours')
+  .action(({args, options, logger}) =>{
+    //Appel de la fonction pour la récupération des salles libres
+    getRoom.getRoom (args.hour, args.day, logger);
+  })
+
+ //SPEC_3 Fonction pour afficher pour une salle donnée les créneaux auxquels elle sera libre.
+  .command('FreeHour','Créneaux libres')
+  .argument ('<room>', 'Salle')
+  .action(({args, options, logger}) =>{
+    //Appel de la fonction pour la récup"ration des créneaux libres
+    getHour.getHour (args.room, logger);
+    
 
   .command("quality", "Vérifier la qualité des données d'emploi du temps")
   .action(({ args, options, logger }) => {
