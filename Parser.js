@@ -2,6 +2,8 @@
 
 const { getCruFilesContent } = require("./data");
 
+const days = ["L", "MA", "ME", "J", "V", "S", "D"];
+
 class Course {
   constructor(code) {
     this.code = code;
@@ -10,6 +12,12 @@ class Course {
 
   addSession(session) {
     this.sessions.push(session);
+  }
+
+  getSessionsIn(start_date, end_date) {
+    return this.sessions.filter((session) =>
+      session.isSessionIn(start_date, end_date)
+    );
   }
 }
 
@@ -22,6 +30,13 @@ class Session {
     this.time = time;
     this.frequency = frequency;
     this.room = room;
+  }
+
+  isSessionIn(start_date, end_date) {
+    return (
+      days.indexOf(this.day) >= days.indexOf(start_date) &&
+      days.indexOf(this.day) <= days.indexOf(end_date)
+    );
   }
 }
 
@@ -166,3 +181,5 @@ CourseParser.prototype.session = function (input) {
 };
 
 module.exports = CourseParser;
+module.exports.Course = Course;
+module.exports.Session = Session;
