@@ -4,6 +4,7 @@ const { getCruFilesContent } = require("./data");
 
 const days = ["L", "MA", "ME", "J", "V", "S", "D"];
 
+// Représente un cours avec un code et une liste de sessions
 class Course {
   constructor(code) {
     this.code = code;
@@ -21,6 +22,7 @@ class Course {
   }
 }
 
+// Représente une session de cours avec des détails tels que le type, le numéro, la capacité, le jour, l'heure, la fréquence et la salle
 class Session {
   constructor(type, num, capacity, day, time, frequency, room) {
     this.type = type;
@@ -40,6 +42,7 @@ class Session {
   }
 }
 
+// Initialise une instance de CourseParser
 var CourseParser = function (showTokenize, showParsedSymbols) {
   this.parsedCourses = [];
   this.symb = ["+"];
@@ -48,6 +51,7 @@ var CourseParser = function (showTokenize, showParsedSymbols) {
   this.errorCount = 0;
 };
 
+// Divise les données en tokens en utilisant un séparateur défini
 CourseParser.prototype.tokenize = function (data) {
   var separator = /(\r\n)/;
   return data
@@ -55,6 +59,7 @@ CourseParser.prototype.tokenize = function (data) {
     .filter((val) => !val.match(separator) && val.trim() !== "");
 };
 
+// Analyse les données et affiche le résultat, y compris les erreurs éventuelles
 CourseParser.prototype.parse = function (data) {
   var tData = this.tokenize(data);
   if (this.showTokenize) {
@@ -68,6 +73,7 @@ CourseParser.prototype.parse = function (data) {
   }
 };
 
+//  Récupère le contenu des fichiers du répertoire spécifié et renvoie une promesse résolue avec les cours analysés
 CourseParser.prototype.getParsedCourses = function () {
   const directoryPath = ".\\data"; // Replace with your directory path
 
@@ -84,11 +90,13 @@ CourseParser.prototype.getParsedCourses = function () {
   });
 };
 
+// Affiche un message d'erreur et incrémente le compteur d'erreurs
 CourseParser.prototype.errMsg = function (msg, input) {
   this.errorCount++;
   console.log("Parsing Error ! on " + input + " -- msg : " + msg);
 };
 
+// Retourne le prochain élément dans l'entrée
 CourseParser.prototype.next = function (input) {
   if (input.length === 0) {
     this.errMsg("Unexpected end of input", []);
@@ -97,6 +105,7 @@ CourseParser.prototype.next = function (input) {
   return input.shift();
 };
 
+// Vérifie si un symbole est accepté par l'analyseur
 CourseParser.prototype.accept = function (s) {
   var idx = this.symb.indexOf(s);
   if (idx === -1) {
@@ -105,10 +114,12 @@ CourseParser.prototype.accept = function (s) {
   return idx;
 };
 
+// Vérifie si le prochain symbole dans l'entrée correspond à un symbole donné
 CourseParser.prototype.check = function (s, input) {
   return input.length > 0 && this.accept(s) === this.accept(input[0]);
 };
 
+// S'attend à ce que le prochain symbole dans l'entrée soit égal à un symbole spécifié
 CourseParser.prototype.expect = function (s, input) {
   var nextSymbol = this.next(input);
   if (nextSymbol && s === nextSymbol) {
@@ -118,6 +129,7 @@ CourseParser.prototype.expect = function (s, input) {
   return false;
 };
 
+// Parcourt la liste d'entrée pour extraire et ajouter des cours
 CourseParser.prototype.listCourses = function (input) {
   while (input.length > 0) {
     if (input[0] === "+UVUV") {
@@ -134,6 +146,7 @@ CourseParser.prototype.listCourses = function (input) {
   }
 };
 
+//Analyse les détails d'un cours et crée une instance de Course
 CourseParser.prototype.course = function (input) {
   const courseCode = this.next(input).slice(1); // Remove the '+' sign
   let course = new Course(courseCode);
@@ -146,6 +159,7 @@ CourseParser.prototype.course = function (input) {
   return course;
 };
 
+// Analyse les détails d'une session et crée une instance de Session
 CourseParser.prototype.session = function (input) {
   const sessionDetails = this.next(input).split(",");
   if (sessionDetails.length < 6) {
@@ -164,6 +178,7 @@ CourseParser.prototype.session = function (input) {
   return new Session(type, num, capacity, day, time, frequency, room);
 };
 
+// Exporte les classes Course et Session et le constructeur CourseParser
 module.exports = CourseParser;
 module.exports.Course = Course;
 module.exports.Session = Session;
