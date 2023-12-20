@@ -94,18 +94,12 @@ CourseParser.prototype.next = function (input) {
     this.errMsg("Unexpected end of input", []);
     return null;
   }
-  var curS = input.shift();
-  /* if (this.showParsedSymbols) {
-    console.log(curS);
-  } */
-  return curS;
+  return input.shift();
 };
 
 CourseParser.prototype.accept = function (s) {
-  //console.log("s", s);
   var idx = this.symb.indexOf(s);
   if (idx === -1) {
-    //this.errMsg("symbol " + s + " unknown", [" "]);
     return false;
   }
   return idx;
@@ -119,14 +113,12 @@ CourseParser.prototype.expect = function (s, input) {
   var nextSymbol = this.next(input);
   if (nextSymbol && s === nextSymbol) {
     return true;
-  } else {
-    this.errMsg("Expected symbol " + s + ", but found " + nextSymbol, input);
-    return false;
-  }
+  } 
+  this.errMsg("Expected symbol " + s + ", but found " + nextSymbol, input);
+  return false;
 };
 
 CourseParser.prototype.listCourses = function (input) {
-  //console.log("input", input);
   while (input.length > 0) {
     if (input[0] === "+UVUV") {
       input.shift();
@@ -140,42 +132,34 @@ CourseParser.prototype.listCourses = function (input) {
       input.shift();
     }
   }
-  //this.expect("$$", input);
 };
 
 CourseParser.prototype.course = function (input) {
-  /* if (!this.check("COURSE_CODE", input[0])) {
-    this.errMsg("Course code expected", input);
-    return null;
-  } */
-
-  var courseCode = this.next(input).slice(1); // Remove the '+' sign
-  var course = new Course(courseCode);
+  const courseCode = this.next(input).slice(1); // Remove the '+' sign
+  let course = new Course(courseCode);
 
   while (input.length !== 0 && /\/{2}/.test(input[0])) {
-    var session = this.session(input);
-    if (session) {
+    if (this.session(input)) {
       course.addSession(session);
     }
   }
-  //console.log("course", course);
   return course;
 };
 
 CourseParser.prototype.session = function (input) {
-  var sessionDetails = this.next(input).split(",");
+  const sessionDetails = this.next(input).split(",");
   if (sessionDetails.length < 6) {
     this.errMsg("Incomplete session details", sessionDetails);
     return null;
   }
 
-  var type = sessionDetails[0];
-  var num = sessionDetails[1];
-  var capacity = sessionDetails[2].split("=")[1];
-  var day = sessionDetails[3].split(" ")[0].split("=")[1];
-  var time = sessionDetails[3].split(" ")[1];
-  var frequency = sessionDetails[4];
-  var room = sessionDetails[5].split("=")[1].split(/\/{2}/)[0];
+  const type = sessionDetails[0];
+  const num = sessionDetails[1];
+  const capacity = sessionDetails[2].split("=")[1];
+  const day = sessionDetails[3].split(" ")[0].split("=")[1];
+  const time = sessionDetails[3].split(" ")[1];
+  const frequency = sessionDetails[4];
+  const room = sessionDetails[5].split("=")[1].split(/\/{2}/)[0];
 
   return new Session(type, num, capacity, day, time, frequency, room);
 };
