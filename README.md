@@ -18,7 +18,7 @@ Voici comment utiliser les différentes commandes de SRU-CLI :
 - Arguments :
   - `<start>` : Date de début (format YYYY-MM-DD)
   - `<end>` : Date de fin (format YYYY-MM-DD)
-  - `[filename]` : Nom du fichier de sortie (défaut : output.ics)
+  - `[filename]` : Nom du fichier de sortie sans ajouter l'extention (défaut : output)
 - Usage : `node caporalCli.js calendar <start> <end> [filename]`
 
 ### Vérifier la Qualité des Données
