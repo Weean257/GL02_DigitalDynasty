@@ -45,7 +45,7 @@ cli
     //Appel de la fonction pour la récup"ration des créneaux libres
     getHour.getHour (args.room, logger);
     
-
+  })
   .command("quality", "Vérifier la qualité des données d'emploi du temps")
   .action(({ args, options, logger }) => {
     const parser = new CourseParser();
