@@ -17,7 +17,10 @@ function saveToFile(data, filename) {
   const path = require("path");
 
   const directory = "calendar_files";
-  const filePath = path.join(directory, filename + '.ics');
+
+  // Valider le nom de fichier pour éviter les caractères non valides ou potentiellement dangereux
+  const validFilename = filename.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const filePath = path.join(directory, validFilename);
 
   // Créer le dossier s'il n'existe pas
   if (!fs.existsSync(directory)) {
