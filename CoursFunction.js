@@ -2,39 +2,36 @@
 
 const CourseParser = require("./Parser");
 
-// Fonction pour obtenir les salles associées à un cours (spec 1)
-
-async function getSalles(cours) {
-  // Créer une instance de CourseParser
+// Fonction pour obtenir les cours parsés
+async function getParsedCourses() {
   const courseParser = new CourseParser();
-
-  // Obtenir les cours parsés à partir des fichiers dans le répertoire spécifié
-  const parsedCourses = await courseParser.getParsedCourses();
-
-  // Rechercher le cours spécifié
-  const upperCaseTarget = cours && cours.toUpperCase(); 
-
-  let selectedCourse = null;
-  for (const course of parsedCourses) {
-    if (course.code && upperCaseTarget && course.code.toUpperCase() === upperCaseTarget) {
-      selectedCourse = course;
-      break;
-    }
-  }
-  return selectedCourse.sessions  
+  return await courseParser.getParsedCourses();
 }
-// Fonction pour récupérer les capacités maximales d'une salle ( spec 2)
+
+// Fonction pour obtenir les salles associées à un cours (spec 1)
+async function getSalles(cours) {
+  const parsedCourses = await getParsedCourses();
+  const upperCaseTarget = cours && cours.toUpperCase();
+
+  // Créer un index des cours pour accélérer la recherche
+  const courseIndex = {};
+  parsedCourses.forEach((course) => {
+    if (course.code) {
+      courseIndex[course.code.toUpperCase()] = course.sessions;
+    }
+  });
+
+  // Rechercher le cours spécifié dans l'index
+  const selectedCourseSessions = courseIndex[upperCaseTarget] || null;
+
+  return selectedCourseSessions;
+}
+
+// Fonction pour récupérer les capacités maximales d'une salle (spec 2)
 async function getCapacite(salle, logger) {
+  const parsedCourses = await getParsedCourses();
+  const selectedSalle = salle.toLowerCase();
 
-  // Créer une instance de CourseParser
-  const courseParser = new CourseParser();
-
-  // Obtenir les cours parsés à partir des fichiers dans le répertoire spécifié
-  const parsedCourses = await courseParser.getParsedCourses();
- 
-  // Rechercher la salle spécifiée
-  const selectedSalle = salle.toLowerCase(); // Convertir en minuscules pour la recherche insensible à la casse
-   
   let salleCapacite = null;
 
   for (const course of parsedCourses) {
@@ -48,8 +45,8 @@ async function getCapacite(salle, logger) {
       break;
     }
   }
-  
-return salleCapacite   
+
+  return salleCapacite;
 }
 
 module.exports = {
