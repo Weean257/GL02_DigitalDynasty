@@ -6,7 +6,7 @@ SRU-CLI est un outil en ligne de commande pour la gestion et l'analyse des emplo
 ## Installation
 Pour installer SRU-CLI, vous devez avoir Node.js installé sur votre machine. Suivez ces étapes :
 1. Clonez le dépôt : `git clone https://github.com/OprahN/GL02_DigitalDynasty`
-2. Naviguez dans le dossier du projet : `cd sru-cli`
+2. Naviguez dans le dossier du projet, par exemple : "cd documents/gl02/gl02_DigitalDynasty" il faut evidement adapter cette commande à l'endroit ouvous avez enregistré le projet
 3. Installez les dépendances : `npm install`
 4. Installez globalement Vega-Lite : `npm install -g vega vega-lite vega-cli`
 
