@@ -51,14 +51,16 @@ Voici comment utiliser les différentes commandes de SRU-CLI :
 - Génère un graphique montrant les taux d'occupation des salles.
 - Usage : `node caporalCli.js generate-occupancy-chart`
 
+## Auteurs
+Les auteurs du projet sont les membres de l'équipe Dygital Dynasty soit : 
+Oprah NKAM, Dora Chelsy NGUEMO KAMWOUA, Comlan Boris Junior KOULEVO et Kevin Kossi Serge TIASSOU
+Pour toute question ou demande de support, veuillez contacter oprah.nkm@gmail.com.
+
 ## Contribution
-Les contributions à ce projet sont les bienvenues. Veuillez suivre ces étapes pour contribuer :
-1. Forkez le dépôt.
-2. Créez une nouvelle branche pour vos modifications.
-3. Soumettez une pull request pour révision.
+Cette fork a été créée par l'équipe TC Forever, composée de :
+Pierre BOURGUEIL, Hortense KERSUZAN, Lou MORALES et Tom QUANTIN
 
 ## Licence
 Ce projet est distribué sous la licence MIT.
 
-## Contact
-Pour toute question ou demande de support, veuillez contacter oprah.nkm@gmail.com.
+
